@@ -1,8 +1,9 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 import "./App.css";
 import UserBar from "./user/UserBar";
 import CreatePost from "./post/CreatePost";
 import PostList from "./post/PostList";
+import appReducer from "./reducer";
 
 const defaultPosts = [
   {
@@ -11,52 +12,24 @@ const defaultPosts = [
     author: "Justin",
   },
   {
-    title: "Using React Fragements",
+    title: "Using React Fragments",
     content: "Keeping the DOM tree clean!",
-    author: "Danile Craig",
+    author: "Daniel Craig",
   },
 ];
 
-function userReducer(state, action) {
-  switch (action.type) {
-    case "LOGIN":
-    case "REGISTER":
-      return action.username;
-
-    case "LOGOUT":
-      return "";
-
-    default:
-      throw new Error();
-  }
-}
-
-function postsReducer(state, action) {
-  switch (action.type) {
-    case "CREATE_POST":
-      const newPost = {
-        title: action.title,
-        content: action.content,
-        author: action.author,
-      };
-      return [newPost, ...state];
-
-    default:
-      throw new Error();
-  }
-}
-
 function App() {
-  const [user, dispatchUser] = useReducer(userReducer, "");
-  const [posts, dispatchPosts] = useReducer(postsReducer, defaultPosts);
+  const [state, dispatch] = useReducer(appReducer, {
+    user: "",
+    posts: defaultPosts,
+  });
+  const { user, posts } = state;
 
   return (
     <div className='App'>
-      <UserBar user={user} dispatch={dispatchUser} />
+      <UserBar user={user} dispatch={dispatch} />
       <br />
-      {user && (
-        <CreatePost user={user} posts={posts} dispatch={dispatchPosts} />
-      )}
+      {user && <CreatePost user={user} posts={posts} dispatch={dispatch} />}
       <br />
       <hr />
       <PostList posts={posts} />
