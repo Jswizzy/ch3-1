@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import "./App.css";
 import UserBar from "./user/UserBar";
 import CreatePost from "./post/CreatePost";
@@ -12,9 +12,9 @@ const defaultPosts = [
     author: "Justin",
   },
   {
-    title: "Using React Fragments",
+    title: "Using React Fragements",
     content: "Keeping the DOM tree clean!",
-    author: "Daniel Craig",
+    author: "Danile Craig",
   },
 ];
 
@@ -24,6 +24,14 @@ function App() {
     posts: defaultPosts,
   });
   const { user, posts } = state;
+
+  useEffect(() => {
+    if (user) {
+      document.title = `${user} - React Hooks Blog`;
+    } else {
+      document.title = "React Hooks Blog";
+    }
+  }, [user]);
 
   return (
     <div className='App'>
