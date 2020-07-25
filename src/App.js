@@ -8,19 +8,6 @@ import Header from "./Header";
 import { ThemeContext, StateContext } from "./contexts";
 import ChangeTheme from "./ChangeTheme";
 
-const defaultPosts = [
-  {
-    title: "React Hooks",
-    content: "The greatest thing since Sliced Bread!",
-    author: "Justin",
-  },
-  {
-    title: "Using React Fragements",
-    content: "Keeping the DOM tree clean!",
-    author: "Danile Craig",
-  },
-];
-
 function App() {
   const [theme, setTheme] = useState({
     primaryColor: "deepskyblue",
@@ -29,9 +16,9 @@ function App() {
 
   const [state, dispatch] = useReducer(appReducer, {
     user: "",
-    posts: defaultPosts,
+    posts: [],
   });
-  const { user, posts } = state;
+  const { user } = state;
 
   useEffect(() => {
     if (user) {
@@ -40,6 +27,12 @@ function App() {
       document.title = "React Hooks Blog";
     }
   }, [user]);
+
+  useEffect(() => {
+    fetch("/api/posts")
+      .then(result => result.json())
+      .then(posts => dispatch({ type: "FETCH_POSTS", posts }));
+  }, []);
 
   return (
     <StateContext.Provider value={{ state, dispatch }}>
